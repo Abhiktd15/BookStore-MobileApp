@@ -3,8 +3,8 @@ import {create} from 'zustand'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 type User = {
-    username:string;
-    email:string;
+    username?:string;
+    email?:string;
     password?:string;
 }
 
@@ -13,6 +13,9 @@ type StoreState = {
     token: string | null;
     isLoading: boolean;
     register: (signupData: User) => Promise<{success: boolean; error?: string}>;
+    login: (logindata:User) => Promise<{success:boolean;error?:string}>;
+    checkAuth: () => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<StoreState>((set) => ({
@@ -48,6 +51,51 @@ export const useAuthStore = create<StoreState>((set) => ({
             }
             
         }
-
+    },
+    login: async (loginData:User) => {
+        set({isLoading:true})
+        try {
+            const response = await fetch(`${baseUrl}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(loginData),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+            await AsyncStorage.setItem("user", JSON.stringify(data.user));
+            await AsyncStorage.setItem("token", data.token);
+            set({user: data.user, token: data.token,isLoading:false});
+            return {success:true}
+        } catch (error:any) {
+            set({isLoading:false})
+            console.log("Error during login:", error);
+            set({user: null, token: null});
+            return {success:false, error:error.message}
+        }
+    },
+    checkAuth: async () => {
+        try {
+            const user = await AsyncStorage.getItem("user");
+            const token = await AsyncStorage.getItem("token");
+            if(user && token){
+                set({user: JSON.parse(user), token})
+            }
+        } catch (error:any) {
+            console.log("Error checking auth:", error);
+            set({user: null, token: null})
+        }
+    },
+    logout: async () => {
+        try {
+            await AsyncStorage.removeItem("user");
+            await AsyncStorage.removeItem("token");
+            set({user: null, token: null});
+        } catch (error) {
+            console.log("Error during logout:", error);
+        }
     }
 }))

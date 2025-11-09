@@ -1,9 +1,10 @@
 import styles from '@/assets/styles/login.styles'
 import React from 'react'
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import COLORS from '@/constants/colors'
 import { Link } from 'expo-router'
+import { useAuthStore } from '@/store/authStore'
 
 const Login = () => {
     const [loginData,setLoginData] = React.useState({
@@ -11,9 +12,14 @@ const Login = () => {
         password:''
     })
     const [showPassword,setShowPassword] = React.useState(false)
-    const [isLoading,setIsLoading] = React.useState(false)
-
-    const handleLogin = () => {}
+    const {login,isLoading} = useAuthStore()
+    const handleLogin = async () => {
+        // Implement login logic here
+        const result = await login(loginData)
+        if(!result.success){
+            Alert.alert("error",result.error || "Login failed")
+        }
+    }
 
     return (
         <KeyboardAvoidingView
