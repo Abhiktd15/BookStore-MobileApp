@@ -11,19 +11,17 @@ export default function RootLayout() {
 
   const {user,token,checkAuth} = useAuthStore();
 
+  // console.log("Auth State - User:", user, "Token:", token);
   useEffect(() => {
     checkAuth();
   }, []);
 
   useEffect(() => {
-    const isAuthScreen = segments[0] === "(auth)"
+    const inAuthScreen = segments[0] === "(auth)";
     const isSignedIn = user && token;
 
-    if (!isSignedIn && !isAuthScreen) {
-      router.replace("/(auth)");
-    } else if (isSignedIn && isAuthScreen) {
-      router.replace("/(tabs)");
-    }
+    if (!isSignedIn && !inAuthScreen) router.replace("/(auth)");
+    else if (isSignedIn && inAuthScreen) router.replace("/(tabs)");
   }, [user, token, segments]);
 
   return <SafeAreaProvider>

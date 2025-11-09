@@ -12,6 +12,7 @@ type StoreState = {
     user: User | null;
     token: string | null;
     isLoading: boolean;
+    isCheckingAuth: boolean;
     register: (signupData: User) => Promise<{success: boolean; error?: string}>;
     login: (logindata:User) => Promise<{success:boolean;error?:string}>;
     checkAuth: () => Promise<void>;
@@ -22,6 +23,7 @@ export const useAuthStore = create<StoreState>((set) => ({
     user: null,
     token:null,
     isLoading:false,
+    isCheckingAuth:false,
 
     register: async (signupData: User) => {
         set({isLoading:true})
