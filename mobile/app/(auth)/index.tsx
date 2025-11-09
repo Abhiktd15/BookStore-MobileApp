@@ -16,6 +16,7 @@ const Login = () => {
     const handleLogin = async () => {
         // Implement login logic here
         const result = await login(loginData)
+
         if(!result.success){
             Alert.alert("error",result.error || "Login failed")
         }
