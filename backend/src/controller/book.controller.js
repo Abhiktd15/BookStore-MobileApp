@@ -85,3 +85,14 @@ export const deleteBook = async (req, res) => {
         res.status(500).json({message:"Server Error"});
     }
 }
+
+export const getUserBooks = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const books = await Book.find({user: userId}).sort({createdAt:-1});
+        res.status(200).json({books});
+    } catch (error) {
+        console.error("Error fetching user books:", error);
+        res.status(500).json({message:"Server Error"});
+    }
+}

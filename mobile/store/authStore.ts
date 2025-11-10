@@ -7,6 +7,7 @@ export type User = {
     email?:string;
     password?:string;
     profileImage?:string;
+    createdAt?:string;
 }
 
 type StoreState = {

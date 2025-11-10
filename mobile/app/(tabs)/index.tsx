@@ -9,7 +9,7 @@ import { Image } from 'expo-image'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native'
 
-type BookItem = {
+export type BookItem = {
     id: string;
     title: string;
     user: User;
