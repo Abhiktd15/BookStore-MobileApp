@@ -12,7 +12,7 @@ const Login = () => {
         password:''
     })
     const [showPassword,setShowPassword] = React.useState(false)
-    const {login,isLoading} = useAuthStore()
+    const {login,isLoading,isCheckingAuth} = useAuthStore()
     const handleLogin = async () => {
         // Implement login logic here
         const result = await login(loginData)
@@ -21,6 +21,8 @@ const Login = () => {
             Alert.alert("error",result.error || "Login failed")
         }
     }
+
+    if (isCheckingAuth) return null;
 
     return (
         <KeyboardAvoidingView

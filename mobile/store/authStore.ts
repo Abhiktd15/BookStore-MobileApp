@@ -2,10 +2,11 @@ import { baseUrl } from '@/constants/constants'
 import {create} from 'zustand'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 
-type User = {
+export type User = {
     username?:string;
     email?:string;
     password?:string;
+    profileImage?:string;
 }
 
 type StoreState = {
